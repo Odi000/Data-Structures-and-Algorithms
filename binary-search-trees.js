@@ -19,16 +19,31 @@ function Tree(array) {
     }
   }
 
-  function remove(el, node=root) {
-    if(node == null) return;
+  function remove(el, node = root) {
+    if (node == null) return;
+    let side = "left";
     if (el > node.data) {
-      if (el === node.right.data && !node.right.left && !node.right.right) {
-        node.right = null;
-      } remove(el, node.right);
+      let side = "right";
+      if (!checkForChilds(el, node, side)) remove(el, node[side]);
     } else {
-      if (el === node.left.data && !node.left.left && !node.left.right) {
-        node.left = null;
-      } remove(el, node.left);
+      if (!checkForChilds(el, node, side)) remove(el, node[side]);
+    }
+
+    //function call
+    function checkForChilds(el, node, side) {
+      if (el === node[side].data) {
+        if (node[side].left && node[side].right) {
+          console.log('ka dy fmi');
+        } else if (node[side].left || node[side].right) {
+          console.log('ka ni fmi');
+          const childNode = node[side].left? node[side].left: node[side].right;
+          node[side].data = childNode.data;
+          node[side].left = null;
+          node[side].right = null;
+        } else {
+          node[side] = null;
+        } return true
+      } else return false;
     }
   }
 
@@ -62,10 +77,14 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 
 
 let smaple = [];
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 11; i++) {
   smaple[i] = i + 1;
 }
 
 const dataTree = Tree(smaple);
 
 prettyPrint(dataTree.root)
+console.log(" \n\n ");
+dataTree.remove(10);
+// dataTree.remove(73);
+prettyPrint(dataTree.root);
