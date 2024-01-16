@@ -2,7 +2,7 @@ class HashMap {
     constructor(size = 16) {
         this.buckets = [];
         this.bucketsLength = size;
-        this.loadLimit = 0.75;
+        this.loadLimit = 1;
         this.loadFactor = function () {
             let filledBuckets = 0;
             this.buckets.forEach(el => el ? filledBuckets++ : false);
@@ -73,6 +73,39 @@ class HashMap {
         }
         */
     }
+
+    get(key) {
+        const hashCode = this.hash(key);
+        const index = hashCode % this.bucketsLength;
+        let result = null;
+
+        if (this.buckets[index]) {
+            if (this.buckets[index].key === key) {
+                result = this.buckets[index];
+            } else {
+                let checkedBuckets = 1;
+
+                console.log(checkBuckets(index + 1, key, this));
+
+                function checkBuckets(index, key, hashMap) {
+                    if (index >= hashMap.buckets.length) index = 0;
+                    if (hashMap.buckets[index]) {
+                        if (hashMap.buckets[index].key === key) {
+                            return hashMap.buckets[index];
+                        }
+                    } else if (checkedBuckets >= hashMap.buckets.length) {
+                        return null;
+                    } else {
+                        console.log("hit")
+                        checkBuckets(index + 1, key, hashMap);
+                    }
+                }
+            }
+        } else {
+            result = null;
+        }
+        return result;
+    }
 }
 
 
@@ -92,7 +125,7 @@ function stringGenerator(base) {
 
 const sixTeen = [];
 
-while (sixTeen.length < 6) {
+while (sixTeen.length < 16) {
     sixTeen[sixTeen.length] = { key: stringGenerator(3), value: stringGenerator(6) };
 }
 
@@ -104,4 +137,4 @@ sixTeen.forEach(el => {
     harta.set(el.key, el.value);
 })
 
-console.table(harta.buckets)
+console.table(harta.buckets);
