@@ -2,7 +2,7 @@ class HashMap {
     constructor(size = 16) {
         this.buckets = [];
         this.bucketsLength = size;
-        this.loadLimit = 1;
+        this.loadLimit = 0.75;
         this.loadFactor = function () {
             let filledBuckets = 0;
             this.buckets.forEach(el => el ? filledBuckets++ : false);
@@ -23,8 +23,6 @@ class HashMap {
 
     set(key, value) {
         const data = { key, value, pointer: null }
-        const hashCode = this.hash(key);
-        const index = hashCode % this.bucketsLength;
 
         if (this.loadFactor() > this.loadLimit) {
             //Rearrange bucket list
@@ -37,6 +35,9 @@ class HashMap {
             this.bucketsLength = newBucketList.bucketsLength;
             this.buckets = newBucketList.buckets;
         }
+
+        const hashCode = this.hash(key);
+        const index = hashCode % this.bucketsLength;
 
         if (this.buckets[index]) {
             const nextEmptyBucket = findEmptyBucket(index + 1, this);
@@ -85,20 +86,20 @@ class HashMap {
             } else {
                 let checkedBuckets = 1;
 
-                console.log(checkBuckets(index + 1, key, this));
+                result = checkBuckets(index + 1, key, this);
 
                 function checkBuckets(index, key, hashMap) {
+                    if (checkedBuckets >= hashMap.buckets.length) return null;
                     if (index >= hashMap.buckets.length) index = 0;
+                    checkedBuckets++;
+
                     if (hashMap.buckets[index]) {
                         if (hashMap.buckets[index].key === key) {
                             return hashMap.buckets[index];
                         }
-                    } else if (checkedBuckets >= hashMap.buckets.length) {
-                        return null;
-                    } else {
-                        console.log("hit")
-                        checkBuckets(index + 1, key, hashMap);
                     }
+
+                    return checkBuckets(index + 1, key, hashMap);
                 }
             }
         } else {
@@ -125,7 +126,7 @@ function stringGenerator(base) {
 
 const sixTeen = [];
 
-while (sixTeen.length < 16) {
+while (sixTeen.length < 169) {
     sixTeen[sixTeen.length] = { key: stringGenerator(3), value: stringGenerator(6) };
 }
 
