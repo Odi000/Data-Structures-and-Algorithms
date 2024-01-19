@@ -107,6 +107,93 @@ class HashMap {
         }
         return result;
     }
+
+    has(key) {
+        if (this.get(key)) return true;
+        else return false;
+    }
+
+    remove(key) {
+        const hashCode = this.hash(key);
+        const index = hashCode % this.bucketsLength;
+        let result = false;
+
+        if (this.buckets[index]) {
+            if (this.buckets[index].key === key) {
+                result = index;
+            } else {
+                let checkedBuckets = 1;
+
+                result = checkBuckets(index + 1, key, this);
+
+                function checkBuckets(index, key, hashMap) {
+                    if (checkedBuckets >= hashMap.buckets.length) return false;
+                    if (index >= hashMap.buckets.length) index = 0;
+                    checkedBuckets++;
+
+                    if (hashMap.buckets[index]) {
+                        if (hashMap.buckets[index].key === key) {
+                            return index;
+                        }
+                    }
+
+                    return checkBuckets(index + 1, key, hashMap);
+                }
+            }
+        } else {
+            result = false;
+        }
+        if (result) {
+            this.buckets[result] = undefined;
+        } else return result;
+    }
+
+    length() {
+        let length = 0;
+
+        for (let i = 0; i < this.bucketsLength; i++) {
+            if (this.buckets[i]) length++;
+        }
+
+        return length;
+    }
+
+    clear() {
+        this.buckets = [];
+        this.bucketsLength = new HashMap().bucketsLength;
+    }
+
+    keys() {
+        let keysArr = [];
+
+        for (let i = 0; i < this.bucketsLength; i++) {
+            if (this.buckets[i]) keysArr.push(this.buckets[i].key);
+        }
+
+        return keysArr;
+    }
+
+    values() {
+        let valuesArr = [];
+
+        for (let i = 0; i < this.bucketsLength; i++) {
+            if (this.buckets[i]) valuesArr.push(this.buckets[i].value);
+        }
+
+        return valuesArr;
+    }
+
+    entries() {
+        let valuesArr = [];
+
+        for (let i = 0; i < this.bucketsLength; i++) {
+            if (this.buckets[i]) {
+                valuesArr.push([this.buckets[i].key, this.buckets[i].value]);
+            }
+        }
+
+        return valuesArr;
+    }
 }
 
 
@@ -126,7 +213,7 @@ function stringGenerator(base) {
 
 const sixTeen = [];
 
-while (sixTeen.length < 169) {
+while (sixTeen.length < 21) {
     sixTeen[sixTeen.length] = { key: stringGenerator(3), value: stringGenerator(6) };
 }
 
