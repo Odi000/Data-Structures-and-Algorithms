@@ -197,7 +197,7 @@ class HashMap {
 }
 
 
-//Prova
+//Tests
 
 function stringGenerator(base) {
     const stringLength = Math.floor((Math.random() * base) + base);
