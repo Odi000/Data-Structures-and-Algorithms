@@ -79,23 +79,38 @@ function getBoardCoordinates() {
     return board;
 }
 
-function getBoardCoordinates_Recursion() {
-    const mainArr = [];
-    recurse();
-    function recurse(coordinates = [0, 0]) {
-        if (coordinates[0] === 7 && coordinates[1] === 7) {
-            return mainArr.push(coordinates);
-        }
-        if (coordinates[1] === 7) {
-            mainArr.push(coordinates);
-            return recurse([coordinates[0] + 1, 0]);
-        }
-        if (coordinates[1] < 8) {
-            mainArr.push(coordinates);
-            return recurse([coordinates[0], coordinates[1] + 1]);
-        }
+// function getBoardCoordinates_Recursion() {
+//     const mainArr = [];
+//     recurse();
+//     function recurse(coordinates = [0, 0]) {
+//         if (coordinates[0] === 7 && coordinates[1] === 7) {
+//             return mainArr.push(coordinates);
+//         }
+//         if (coordinates[1] === 7) {
+//             mainArr.push(coordinates);
+//             return recurse([coordinates[0] + 1, 0]);
+//         }
+//         if (coordinates[1] < 8) {
+//             mainArr.push(coordinates);
+//             return recurse([coordinates[0], coordinates[1] + 1]);
+//         }
+//     }
+//     return mainArr;
+// }
+
+function getBoardCoordinates_Recursion(board = [], coordinates = [0, 0]) {
+    if (coordinates[0] === 7 && coordinates[1] === 7) {
+        return board.push(coordinates);
     }
-    return mainArr;
+    if (coordinates[1] === 7) {
+        board.push(coordinates);
+        return getBoardCoordinates_Recursion(board,[coordinates[0] + 1, 0]);
+    }
+    if (coordinates[1] < 8) {
+        board.push(coordinates);
+        getBoardCoordinates_Recursion(board,[coordinates[0], coordinates[1] + 1]);
+    }
+    return board;
 }
 
 function example(arr) {
