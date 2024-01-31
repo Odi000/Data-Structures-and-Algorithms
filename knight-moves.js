@@ -2,7 +2,7 @@
 class Node {
     constructor(data) {
         this.data = data;
-        this.edges = []
+        this.edges = [];
     }
 }
 
@@ -30,44 +30,32 @@ class KnightMoves {
             }
         })
     }
-}
 
-/*-- Matrix solution
-class KnightMoves {
-    constructor(board) {
-        this.chart = buildChart();
+    to(start, end) {
+        const errorMsg = "Invalid Coordinates";
+        if (!start || !end) return console.log(errorMsg);
+        if (start[0] < 0 || start[0] > 7) return console.log(errorMsg);
+        if (start[1] < 0 || start[1] > 7) return console.log(errorMsg);
+        if (end[0] < 0 || end[0] > 7) return console.log(errorMsg);
+        if (end[1] < 0 || end[1] > 7) return console.log(errorMsg);
 
-        function buildChart() {
-            const chart = {};
+        const queue = [this[start]];
+        let queueSize = 0;
 
-            board.forEach(el => {
-                const key = el.toString();
-                const currentX = el[0];
-                const currentY = el[1];
+        while (queue) {
+            if (queue[0] === this[end]) {
+                return console.log(`Found it ${queue[0].data}`);
+            }
 
-                chart[key] = [];
-
-                for (let i = 0; i < board.length; i++) {
-                    const nextX = board[i][0];
-                    const nextY = board[i][1];
-
-                    if (currentX - 2 === nextX && currentY - 1 === nextY) chart[key].push(1);
-                    else if (currentX - 1 === nextX && currentY - 2 === nextY) chart[key].push(1);
-                    else if (currentX + 1 === nextX && currentY - 2 === nextY) chart[key].push(1);
-                    else if (currentX + 2 === nextX && currentY - 1 === nextY) chart[key].push(1);
-                    else if (currentX + 2 === nextX && currentY + 1 === nextY) chart[key].push(1);
-                    else if (currentX + 1 === nextX && currentY + 2 === nextY) chart[key].push(1);
-                    else if (currentX - 1 === nextX && currentY + 2 === nextY) chart[key].push(1);
-                    else if (currentX - 2 === nextX && currentY + 1 === nextY) chart[key].push(1);
-                    else chart[key].push(0);
-                }
-            });
-
-            return chart;
+            queue.shift().edges.forEach(edge => queue.push(this[edge]));
+            if(queue.length>queueSize){
+                queueSize = queue.length;
+                console.log(queueSize);
+            }
         }
     }
 }
-*/
+
 
 function getBoardCoordinates() {
     const board = []
@@ -79,44 +67,19 @@ function getBoardCoordinates() {
     return board;
 }
 
-// function getBoardCoordinates_Recursion() {
-//     const mainArr = [];
-//     recurse();
-//     function recurse(coordinates = [0, 0]) {
-//         if (coordinates[0] === 7 && coordinates[1] === 7) {
-//             return mainArr.push(coordinates);
-//         }
-//         if (coordinates[1] === 7) {
-//             mainArr.push(coordinates);
-//             return recurse([coordinates[0] + 1, 0]);
-//         }
-//         if (coordinates[1] < 8) {
-//             mainArr.push(coordinates);
-//             return recurse([coordinates[0], coordinates[1] + 1]);
-//         }
-//     }
-//     return mainArr;
-// }
-
 function getBoardCoordinates_Recursion(board = [], coordinates = [0, 0]) {
     if (coordinates[0] === 7 && coordinates[1] === 7) {
         return board.push(coordinates);
     }
     if (coordinates[1] === 7) {
         board.push(coordinates);
-        return getBoardCoordinates_Recursion(board,[coordinates[0] + 1, 0]);
+        return getBoardCoordinates_Recursion(board, [coordinates[0] + 1, 0]);
     }
     if (coordinates[1] < 8) {
         board.push(coordinates);
-        getBoardCoordinates_Recursion(board,[coordinates[0], coordinates[1] + 1]);
+        getBoardCoordinates_Recursion(board, [coordinates[0], coordinates[1] + 1]);
     }
     return board;
 }
 
-function example(arr) {
-    if (arr[1] === 3) return [arr];
-    if (arr[1] < 3) arr[i]++;
-    const board = example(arr);
-}
-
-const graph = new KnightMoves(getBoardCoordinates());
+const chessBoard = new KnightMoves(getBoardCoordinates());
